@@ -1,5 +1,22 @@
 <?php 
+// importando o arquivo com funções de usuarios
+require_once "../inc/funcoes-usuarios.php";
 require_once "../inc/cabecalho-admin.php";
+
+// detectando se o formulário foi acionado (clique no botão, ou ao apresentar enter)
+if(isset($_POST['inserir'])) {
+	// capturando os dados do formulário
+	$nome = $_POST['nome'];
+	$email = $_POST['email'];
+	$senha = password_hash( $_POST['senha'], PASSWORD_DEFAULT);  // criptografando a senha
+	$tipo = $_POST['tipo'];
+
+	// chamando a função que insere o usuário no BD
+	$resultado = inserirUsuario($conexao, $nome, $email, $senha, $tipo);
+
+	// após  inserir o novo usuario, redirecionaremos para a página de lista de usuarios do site
+	header("location:usuarios.php");
+}
 ?>
 
 

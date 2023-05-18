@@ -13,7 +13,6 @@ mysqli_set_charset($conexao, 'utf8');
 // teste de conexao
 if(!$conexao) {
     die(mysqli_connect_error($conecao));
-} else {
-    echo "<p>Conectado com sucesso!<p>";
-}
-?>
+} // else {
+//     echo "<p>Conectado com sucesso!<p>";
+// }

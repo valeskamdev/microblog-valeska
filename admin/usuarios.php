@@ -1,5 +1,10 @@
 <?php 
+// importando funcoes de usuarios
+require_once "../inc/funcoes-usuarios.php";
 require_once "../inc/cabecalho-admin.php";
+
+// chamando a funcao que retorna todos os usuarios cadastrados no BD
+$usuarios = lerUsuarios($conexao);
 ?>
 
 
@@ -29,24 +34,26 @@ require_once "../inc/cabecalho-admin.php";
 				</thead>
 
 				<tbody>
-
+					<?php foreach($usuarios as $usuario) {
+					?>
 					<tr>
-						<td> Nome... </td>
-						<td> E-mail... </td>
-						<td> Tipo... </td>
+						<td><?=$usuario['nome']?></td>
+						<td><?=$usuario['email']?></td>
+						<td><?=$usuario['tipo']?></td>
 						<td class="text-center">
 							<a class="btn btn-warning" 
 							href="usuario-atualiza.php">
 							<i class="bi bi-pencil"></i> Atualizar
 							</a>
 						
+							<!-- parametro de URL para criacao de link dinamico -->
 							<a class="btn btn-danger excluir" 
-							href="usuario-exclui.php">
+							href="usuario-exclui.php?id=<?=$usuario['id']?>">
 							<i class="bi bi-trash"></i> Excluir
 							</a>
 						</td>
 					</tr>
-
+					<?php } ?>
 				</tbody>                
 			</table>
 	</div>
