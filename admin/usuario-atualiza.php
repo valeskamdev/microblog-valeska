@@ -21,6 +21,12 @@ if(isset($_POST['atualizar'])) {
 	} else {
 		$senha = password_hash( $_POST['senha'], PASSWORD_DEFAULT);  // criptografando a senha
 	}
+
+	// chamando a funcao que atualiza os dados do usuario no BD
+	atualizarUsuario($conexao, $id, $nome, $email, $senha, $tipo);
+
+	// redirecionando para a pagina de usuarios
+	header("location:usuarios.php");
 }
 
 ?>
