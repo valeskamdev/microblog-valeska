@@ -43,3 +43,10 @@ function excluirUsuario($conexao, $id) {
     mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
 }
 
+// usada em usuario-atualiza.php
+// retorna os dados de um usuario especifico 
+function lerUmUsuario($conexao, $id) {
+    $sql = "SELECT * FROM usuarios WHERE id = $id";
+    $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+    return mysqli_fetch_assoc($resultado);
+}
