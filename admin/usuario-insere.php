@@ -3,6 +3,13 @@
 require_once "../inc/funcoes-usuarios.php";
 require_once "../inc/cabecalho-admin.php";
 
+// verificando se o usuario logado não é admin, se não for,
+// redireciona para a página de não autorizado
+if($_SESSION['tipo'] != 'admin') {
+	header("location:nao-autorizado.php");
+	exit;
+}
+
 // detectando se o formulário foi acionado (clique no botão, ou ao apresentar enter)
 if(isset($_POST['inserir'])) {
 	// capturando os dados do formulário

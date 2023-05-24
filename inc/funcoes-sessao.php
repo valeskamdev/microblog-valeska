@@ -24,7 +24,24 @@ function verificaAcesso() {
         header("location:../login.php");
 
         // interrompe a execução do script
-        exit();
+        exit;
     } 
+}
+
+function login($id, $nome, $tipo) {
+    //criacao de variaveis de sessao
+    $_SESSION['id'] = $id;
+    $_SESSION['nome'] = $nome;
+    $_SESSION['tipo'] = $tipo;
+
+    // as variaveis de sessao ficam disponiveis para todas as paginas do site,
+    // enquanto o navegador estiver aberto
+}
+
+function logout() {
+    session_start();
+    session_destroy();
+    header("location:../login.php?logout");
+    exit;
 }
 ?>
