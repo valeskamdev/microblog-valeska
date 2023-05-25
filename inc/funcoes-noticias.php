@@ -16,7 +16,7 @@ function upload($arquivo){
     if( !in_array($arquivo['type'], $tiposValidos) ){
         echo "<script>alert('Formato inválido!'); history.back();</script>";
         exit;
-    }
+    }   
 
     // extraindo do arquivo apenas o 'name'
     $nome = $arquivo['name'];
@@ -33,7 +33,8 @@ function upload($arquivo){
 
 // usada em noticias.php
 function lerNoticias($conexao){
-    $sql = "SELECT * FROM noticias ORDER BY data DESC";
+    // relacionando as tabelas noticias e usuarios para obter o nome do autor da noticia
+    $sql = "SELECT noticias.id, noticias.titulo, noticias.data, usuarios.nome FROM noticias INNER JOIN usuarios ON noticias.usuario_id = usuarios.id ORDER BY `noticias`.`data` ASC";
     $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
     
     $noticias = [];
