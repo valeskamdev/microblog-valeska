@@ -13,6 +13,28 @@ $tipoUsuario = $_SESSION['tipo'];
 $noticia = lerUmaNoticia($conexao, $idNoticia, $idUsuario, $tipoUsuario);
 
 // se o botao atualizar for clicado
+if(isset($_POST['atualizar'])) {
+    $titulo = $_POST['titulo'];
+    $texto = $_POST['texto'];
+    $resumo = $_POST['resumo'];
+
+    // algorítmo para atualizar a imagem (se o usuário selecionar uma nova imagem)
+
+    if(empty($_FILES['imagem']['name'])) {
+        // se o usuário não selecionar uma nova imagem, mantém a imagem existente
+        $imagem = $_POST['imagem-existente'];
+    } else {
+        // se o usuário selecionar uma nova imagem, faz o upload da nova imagem
+        $imagem = $_FILES['imagem']['name'];
+        upload($_FILES['imagem']); //envio da imagem para o servidor
+    }
+
+    // chamando a funcao que atualiza os dados da noticia
+    atualizarNoticia($conexao, $titulo, $texto, $resumo, $imagem, $idNoticia, $idUsuario, $tipoUsuario);
+
+    // redirecionando para a página de notícias
+    header("location:noticias.php");
+}
 
 ?>
 
@@ -25,7 +47,9 @@ $noticia = lerUmaNoticia($conexao, $idNoticia, $idUsuario, $tipoUsuario);
             Atualizar dados da notícia
         </h2>
 
-        <form class="mx-auto w-75" action="" method="post" id="form-atualizar" name="form-atualizar">
+        <!-- ATRIBUTO ENCTYPE VALENDO MULTIPART/FORM-DATA NESSESÁRIO em formulários que receberão
+			ARQUIVOS (imagens, documentos, pdf's, planilhas) para processamento -->
+        <form enctype="multipart/form-data" class="mx-auto w-75" action="" method="post" id="form-atualizar" name="form-atualizar">
 
             <div class="mb-3">
                 <label class="form-label" for="titulo">Título:</label>

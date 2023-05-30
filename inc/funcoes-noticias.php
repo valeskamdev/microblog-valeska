@@ -79,3 +79,20 @@ function lerUmaNoticia($conexao, $idNoticia, $idUsuarioLogado, $tipoUsuarioLogad
     // retornando a noticia encontrada
     return mysqli_fetch_assoc($resultado);
 }
+
+// usada em noticia-atualiza.php
+function atualizarNoticia($conexao, $titulo, $texto, $resumo, $imagem, $idNoticia, $idUsuarioLogado, $tipoUsuarioLogado) {
+
+    $sql = "UPDATE noticias SET titulo = '$titulo', texto = '$texto', resumo = '$resumo', imagem = '$imagem'";
+
+    // se o usuario logado for admin, atualiza qualquer noticia
+    if($tipoUsuarioLogado == 'admin'){
+        // sql do admin: atualiza os dados de qualquer noticia
+        $sql .= " WHERE id = $idNoticia";
+    } else {
+        // sql do editor, atualiza apenas as noticias criadas por ele
+        $sql .= " WHERE id = $idNoticia AND usuario_id = $idUsuarioLogado";
+    }
+
+    mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+}
