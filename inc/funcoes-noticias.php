@@ -32,9 +32,17 @@ function upload($arquivo){
 }
 
 // usada em noticias.php
-function lerNoticias($conexao){
-    // relacionando as tabelas noticias e usuarios para obter o nome do autor da noticia
-    $sql = "SELECT noticias.id, noticias.titulo, noticias.data, usuarios.nome FROM noticias INNER JOIN usuarios ON noticias.usuario_id = usuarios.id ORDER BY `noticias`.`data` ASC";
+function lerNoticias($conexao, $idUsuarioLogado, $tipoUsuarioLogado){
+
+    // se o usuario logado for admin, exibe todas as noticias
+    if($tipoUsuarioLogado == 'admin'){
+        // relacionando as tabelas noticias e usuarios para obter o nome do autor da noticia
+        $sql = "SELECT noticias.id, noticias.titulo, noticias.data, usuarios.nome FROM noticias INNER JOIN usuarios ON noticias.usuario_id = usuarios.id ORDER BY `noticias`.`data` DESC";
+    } else {
+        // se o usuario logado for autor, exibe apenas as noticias criadas por ele
+        $sql = "SELECT * FROM noticias WHERE usuario_id = $idUsuarioLogado ORDER BY data DESC";
+    }
+
     $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
     
     $noticias = [];
@@ -47,4 +55,27 @@ function lerNoticias($conexao){
 
     // retornando o array com todas as noticias
     return $noticias;
+}
+
+// usada em noticias.php e paginas da area publica
+function formatarData($data){
+    // convertendo a data do formato do BD para o formato brasileiro
+    return date('d/m/Y H:i', strtotime($data));
+}
+
+// usada em noticia-atualiza.php
+function lerUmaNoticia($conexao, $idNoticia, $idUsuarioLogado, $tipoUsuarioLogado){
+    // se o usuario logado for admin, exibe todas as noticias
+    if($tipoUsuarioLogado == 'admin'){
+        // sql do admin: carrega os dados de qualquer noticia
+        $sql = "SELECT * FROM noticias WHERE id = $idNoticia";
+    } else {
+        // sql do editor, 'exibe apenas as noticias criadas por ele
+        $sql = "SELECT * FROM noticias WHERE id = $idNoticia AND usuario_id = $idUsuarioLogado";
+    }
+
+    $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+    
+    // retornando a noticia encontrada
+    return mysqli_fetch_assoc($resultado);
 }

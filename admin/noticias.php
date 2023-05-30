@@ -2,8 +2,12 @@
 require_once "../inc/funcoes-noticias.php";
 require_once "../inc/cabecalho-admin.php";
 
+// recuperando o id e o tipo do usuario logado
+$idUsuario = $_SESSION['id'];
+$tipoUsuario = $_SESSION['tipo'];
+
 // executando a função lerNoticias() e armazenando o resultado na variável $noticias
-$noticias = lerNoticias($conexao);
+$noticias = lerNoticias($conexao, $idUsuario, $tipoUsuario);
 ?>
 
 
@@ -28,7 +32,9 @@ $noticias = lerNoticias($conexao);
 					<tr>
                         <th>Título</th>
                         <th>Data</th>
+						<?php if($tipoUsuario == 'admin') { ?>
                         <th>Autor</th>
+						<?php } ?>
 						<th class="text-center">Operações</th>
 					</tr>
 				</thead>
@@ -38,16 +44,18 @@ $noticias = lerNoticias($conexao);
 					<?php foreach($noticias as $noticia) { ?>
 					<tr>
                         <td><?=$noticia['titulo']?></td>
-                        <td><?=$noticia['data']?></td>
+                        <td><?=formatarData($noticia['data'])?></td>
+						<?php if($tipoUsuario == 'admin') { ?>
                         <td><?=$noticia['nome']?></td>
+						<?php } ?>
 						<td class="text-center">
 							<a class="btn btn-warning" 
-							href="noticia-atualiza.php">
+							href="noticia-atualiza.php?id=<?=$noticia['id']?>">
 							<i class="bi bi-pencil"></i> Atualizar
 							</a>
 						
 							<a class="btn btn-danger excluir" 
-							href="noticia-exclui.php">
+							href="noticia-exclui.php?id=<?=$noticia['id']?>">
 							<i class="bi bi-trash"></i> Excluir
 							</a>
 						</td>
