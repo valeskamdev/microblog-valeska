@@ -96,3 +96,63 @@ function atualizarNoticia($conexao, $titulo, $texto, $resumo, $imagem, $idNotici
 
     mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
 }
+
+// usada em noticia-exclui.php
+function excluirNoticia($conexao, $idNoticia, $idUsuarioLogado, $tipoUsuarioLogado) {
+    // se o usuario logado for admin, exclui qualquer noticia
+    if($tipoUsuarioLogado == 'admin'){
+        // sql do admin: exclui qualquer noticia
+        $sql = "DELETE FROM noticias WHERE id = $idNoticia";
+    } else {
+        // sql do editor, exclui apenas as noticias criadas por ele
+        $sql = "DELETE FROM noticias WHERE id = $idNoticia AND usuario_id = $idUsuarioLogado";
+    }
+
+    mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+}
+
+/* FUNCOES USADAS NAS PAGINAS DA AREA PUBLICA */
+
+// usada em index.php
+function lerTodasAsNoticias($conexao){
+    $sql = "SELECT * FROM noticias ORDER BY data DESC";
+    $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+    
+    $noticias = [];
+
+    // percorrendo o resultado da consulta e armazenando no array $noticias
+    while ($noticia = mysqli_fetch_assoc($resultado)) {
+        // adicionando cada noticia no array '$noticias'
+        array_push($noticias, $noticia);
+    }
+
+    // retornando o array com todas as noticias
+    return $noticias;
+}
+
+// usada em noticia.php
+function lerDetalhes($conexao, $id){
+    $sql = "SELECT noticias.id, noticias.titulo, noticias.texto, noticias.data, noticias.imagem, usuarios.nome FROM noticias INNER JOIN usuarios ON noticias.usuario_id = usuarios.id WHERE noticias.id = $id";
+
+    $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+
+    // retornando a noticia encontrada
+    return mysqli_fetch_assoc($resultado);
+}
+
+function buscar($conexao, $termo){
+    $sql = "SELECT * FROM noticias WHERE titulo LIKE '%$termo%' OR texto LIKE '%$termo%' OR resumo LIKE '%$termo%' ORDER BY data DESC";
+
+    $resultado = mysqli_query($conexao, $sql) or die(mysqli_error($conexao));
+    
+    $noticias = [];
+
+    // percorrendo o resultado da consulta e armazenando no array $noticias
+    while ($noticia = mysqli_fetch_assoc($resultado)) {
+        // adicionando cada noticia no array '$noticias'
+        array_push($noticias, $noticia);
+    }
+
+    // retornando o array com todas as noticias
+    return $noticias;
+}
